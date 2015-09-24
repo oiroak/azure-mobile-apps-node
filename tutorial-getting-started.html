@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: src/query/index.js</title>
+    <title>JSDoc: Tutorial: Getting Started</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,63 +17,21 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: src/query/index.js</h1>
+    <h1 class="page-title">Tutorial: Getting Started</h1>
 
-    
-
-
-
-    
     <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>// ----------------------------------------------------------------------------
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// ----------------------------------------------------------------------------
-/**
-@module azure-mobile-apps/query
-@description Functionality for creating {@link https://github.com/Azure/queryjs query.js} objects
-*/
-var Query = require('query.js').Query,
-    assert = require('../utilities/assert').argument;
 
-module.exports = {
-    /**
-    Creates a new query against the specified table
-    @param {string} table - Name of the table to query
-    */
-    create: function (table) {
-        assert(table, 'A table name was not specified');
-        return new Query(table);
-    },
-    /**
-    Creates a query from an HTTP request object that encapsulates an OData query
-    @param {express.Request} req The HTTP request object
-    */
-    fromRequest: function(req) {
-        var url = req.path;
-        return Query.Providers.OData.fromOData(
-            url.substring(url.lastIndexOf('/') + 1),
-            req.query.$filter,
-            req.query.$orderby,
-            parseInt(req.query.$skip),
-            parseInt(req.query.$top),
-            req.query.$select,
-            req.query.$inlinecount === 'allpages')
-    },
-    /**
-    Converts a query to an object containing OData query information
-    @param {module:queryjs/Query} query - The query.js Query object to convert
-    */
-    toOData: function (query) {
-        return Query.Providers.OData.toOData(query)
-    }
-}
-</code></pre>
-        </article>
-    </section>
+<header>
+    
 
+    <h2>Getting Started</h2>
+</header>
 
+<article>
+    <h1>Getting started with Node for Azure Mobile Apps</h1>
+</article>
 
+</section>
 
 </div>
 

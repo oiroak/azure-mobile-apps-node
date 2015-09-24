@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: azure-mobile-apps/express/tables</title>
+    <title>JSDoc: Module: azure-mobile-apps/notifications</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: azure-mobile-apps/express/tables</h1>
+    <h1 class="page-title">Module: azure-mobile-apps/notifications</h1>
 
     
 
@@ -40,9 +40,7 @@
     <div class="container-overview">
     
         
-            <div class="description">This module contains functionality for adding tables to an Azure
-Mobile App. It returns middleware that can be attached to an express app with
-some additional functions for registering tables.</div>
+            <div class="description">Functions for managing notification installations and the NH client</div>
         
 
         
@@ -91,7 +89,7 @@ some additional functions for registering tables.</div>
     <!-- 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_express_tables_index.js.html">src/express/tables/index.js</a>, <a href="src_express_tables_index.js.html#line4">line 4</a>
+        <a href="src_notifications_index.js.html">src/notifications/index.js</a>, <a href="src_notifications_index.js.html#line4">line 4</a>
     </li></ul></dd>
      -->
 
@@ -122,14 +120,14 @@ some additional functions for registering tables.</div>
 
     
 
-    <h4 class="name" id="module:azure-mobile-apps/express/tables"><span class="type-signature"></span>(require("azure-mobile-apps/express/tables"))<span class="signature">(configuration)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="module:azure-mobile-apps/notifications"><span class="type-signature"></span>(require("azure-mobile-apps/notifications"))<span class="signature">(configuration)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    Create an instance of an express middleware function for routing and handling table requests.
+    Creates an instance of the notifications module specified in the configuration
 </div>
 
 
@@ -171,7 +169,7 @@ some additional functions for registering tables.</div>
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#configuration">configuration</a></span>
+<span class="param-type"><a href="global.html#notificationsConfiguration">notificationsConfiguration</a></span>
 
 
 
@@ -182,7 +180,7 @@ some additional functions for registering tables.</div>
 
             
 
-            <td class="description last"></td>
+            <td class="description last">The notifications configuration</td>
         </tr>
 
     
@@ -223,7 +221,7 @@ some additional functions for registering tables.</div>
     <!-- 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_express_tables_index.js.html">src/express/tables/index.js</a>, <a href="src_express_tables_index.js.html#line20">line 20</a>
+        <a href="src_notifications_index.js.html">src/notifications/index.js</a>, <a href="src_notifications_index.js.html#line19">line 19</a>
     </li></ul></dd>
      -->
 
@@ -250,7 +248,7 @@ some additional functions for registering tables.</div>
 
         
 <div class="param-desc">
-    An express middleware function with additional members described below.
+    An object with members described below
 </div>
 
 
@@ -283,14 +281,106 @@ some additional functions for registering tables.</div>
 
     
 
-    <h4 class="name" id="~add"><span class="type-signature">(inner) </span>add<span class="signature">(name, definition)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~getClient"><span class="type-signature">(inner) </span>getClient<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    Register a single table with the specified definition.
+    Returns an instance of the Notification Hubs Client for Node
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <!-- 
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_notifications_index.js.html">src/notifications/index.js</a>, <a href="src_notifications_index.js.html#line28">line 28</a>
+    </li></ul></dd>
+     -->
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <a href="http://azure.github.io/azure-sdk-for-node/azure-sb/latest/NotificationHubService.html">NotificationHubService</a> - The Notification Hubs node client
+</div>
+
+
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="~putInstallation"><span class="type-signature">(inner) </span>putInstallation<span class="signature">(installationId, installation, user<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Creates or updates the installation id with the supplied installation
 </div>
 
 
@@ -314,6 +404,8 @@ some additional functions for registering tables.</div>
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -326,7 +418,7 @@ some additional functions for registering tables.</div>
 
         <tr>
             
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>installationId</code></td>
             
 
             <td class="type">
@@ -340,26 +432,31 @@ some additional functions for registering tables.</div>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last">The name of the table. HTTP operations will be exposed on this route.</td>
+            <td class="description last">The installation id, usually a guid</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>definition</code></td>
+                <td class="name"><code>installation</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#tableDefinition">tableDefinition</a></span>
-|
-
-<span class="param-type"><a href="module-azure-mobile-apps_express_tables_table.html">express/tables/table</a></span>
+<span class="param-type">object</span>
 
 
 
@@ -367,10 +464,52 @@ some additional functions for registering tables.</div>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last">The definition for the table.</td>
+            <td class="description last">The notification hubs installation object</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>user</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The user id to associate with the installation</td>
         </tr>
 
     
@@ -411,7 +550,7 @@ some additional functions for registering tables.</div>
     <!-- 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_express_tables_index.js.html">src/express/tables/index.js</a>, <a href="src_express_tables_index.js.html#line28">line 28</a>
+        <a href="src_notifications_index.js.html">src/notifications/index.js</a>, <a href="src_notifications_index.js.html#line37">line 37</a>
     </li></ul></dd>
      -->
 
@@ -434,6 +573,16 @@ some additional functions for registering tables.</div>
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    A promise that yields the notification hubs client response
+</div>
+
+
+
+    
 
 
 
@@ -442,14 +591,14 @@ some additional functions for registering tables.</div>
 
     
 
-    <h4 class="name" id="~import"><span class="type-signature">(inner) </span>import<span class="signature">(path)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~deleteInstallation"><span class="type-signature">(inner) </span>deleteInstallation<span class="signature">(installationId)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    Import a file or folder of modules containing table definitions
+    Deletes the installation specified by the installation id
 </div>
 
 
@@ -485,7 +634,7 @@ some additional functions for registering tables.</div>
 
         <tr>
             
-                <td class="name"><code>path</code></td>
+                <td class="name"><code>installationId</code></td>
             
 
             <td class="type">
@@ -502,10 +651,7 @@ some additional functions for registering tables.</div>
 
             
 
-            <td class="description last">Path to a file or folder containing modules that export either a <a href="global.html#tableDefinition">tableDefinition</a> or
-    <a href="module-azure-mobile-apps_express_tables_table.html">table object</a>.
-    The path is relative to configuration.basePath that defaults to the location of your startup module.
-    The table name will be derived from the physical file name.</td>
+            <td class="description last">The installation id, usually a guid</td>
         </tr>
 
     
@@ -546,7 +692,7 @@ some additional functions for registering tables.</div>
     <!-- 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_express_tables_index.js.html">src/express/tables/index.js</a>, <a href="src_express_tables_index.js.html#line42">line 42</a>
+        <a href="src_notifications_index.js.html">src/notifications/index.js</a>, <a href="src_notifications_index.js.html#line59">line 59</a>
     </li></ul></dd>
      -->
 
@@ -569,6 +715,16 @@ some additional functions for registering tables.</div>
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    A promise that yields the notification hubs client response
+</div>
+
+
+
+    
 
 
 
