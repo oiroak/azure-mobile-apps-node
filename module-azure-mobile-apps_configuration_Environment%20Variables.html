@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/auth/index.js - Documentation</title>
+    <title>azure-mobile-apps/configuration/Environment Variables - Documentation</title>
     <meta name="viewport" content="initial-scale=.75">
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,85 +29,475 @@
 <div id="main">
     
     
-    <h1 class="page-title">src/auth/index.js</h1>
+    <h1 class="page-title">azure-mobile-apps/configuration/Environment Variables</h1>
     
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>// ----------------------------------------------------------------------------
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// ----------------------------------------------------------------------------
-/**
-@module azure-mobile-apps/auth
-@description Helper functions for working with JWT tokens
-*/
-var user = require('./user'),
-    jwt = require('jsonwebtoken'),
-    promises = require('../utilities/promises');
+        
+            
+        
+    
+</header>
 
-/**
-Create an instance of a helper based on the supplied configuration.
-@param {authConfiguration} configuration The authentication configuration
-@returns An object with members described below.
-*/
-module.exports = function (configuration) {
-    // var key = hashSecret(configuration.secret);
-    var key = hexStringToBuffer(configuration.secret);
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Azure Mobile Apps can be configured by providing values for specific environment<br>variables. These variables are described below. Variable names are not case sensitive.<br>For configuration using Javascript, see <a href="global.html#configuration"><code>global configuration</code></a>.</p></div>
+        
 
-    return {
-        /**
-        Validate a JWT token
-        @param {string|Buffer} token The JWT token to validate
-        @returns A promise that yields a {@link module:azure-mobile-apps/auth/user user} object on success.
-        */
-        validate: function (token) {
-            return promises.create(function (resolve, reject) {
-                var options = {
-                    audience: configuration.audience || 'urn:microsoft:windows-azure:zumo',
-                    issuer: configuration.issuer || 'urn:microsoft:windows-azure:zumo'
-                };
+        
+            
 
-                jwt.verify(token, key, options, function (err, claims) {
-                    if(err)
-                        reject(err);
-                    else
-                        resolve(user(configuration, token, claims));
-                });
-            });
-        },
-        decode: function (token) {
-            return user(configuration, token, jwt.decode(token));
-        },
-        /**
-        Create a token from the specified payload
-        @param {object} payload The payload to sign
-        @returns {string} The signed token.
-        */
-        sign: function (payload) {
-            var options = {
-                audience: configuration.audience || 'urn:microsoft:windows-azure:zumo',
-                issuer: configuration.issuer || 'urn:microsoft:windows-azure:zumo',
-                expiresIn: (configuration.expires || 1440) * 60
-            };
-            return jwt.sign(payload, key, options);
-        }
-    };
-};
 
-function hexStringToBuffer(hexString) {
-    var bytes = [];
-    for (var i = 0; i &lt; hexString.length; i += 2)
-        bytes.push(parseInt(hexString.substr(i, 2), 16));
-    return new Buffer(bytes);
-}
-</code></pre>
-        </article>
-    </section>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>MS_MobileAppName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Name of the mobile app</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>MS_MobileLogLevel</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Minimum log level of messages to log (error, warn, info, verbose, debug, silly)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>MS_DebugMode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Enables or disables debug mode</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>MS_TableConnectionString</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Connection string to use to connect to SQL Server</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>MS_TableSchema</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Default schema name for sql tables. Can override in table config</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>MS_DynamicSchema</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Disables dynamic schema for tables when set to false</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>EMA_RuntimeUrl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Authentication gateway URL</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Website_Auth_Signing_Key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>JWT token signing / validation key</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>MS_CrossDomainWhitelist</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Comma delimited list of domains to allow cross domain requests from</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>MS_NotificationHubName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Name of the notification hub for the app</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>MS_NotificationHubConnectionString</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Connection string to notification hub for the app</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>MS_DisableVersionHeader</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If specified, disables x-zumo-server-version header</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>MS_SkipVersionCheck</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If specified, does not validate client api version before serving requests</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Website_Hostname</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Hostname of the mobile app, used as issuer &amp; audience for auth</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_configuration_from_environment.js.html">src/configuration/from/environment.js</a>, <a href="src_configuration_from_environment.js.html#line4">line 4</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
