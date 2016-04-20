@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>jsdoc/queryjs.js - Documentation</title>
+    <title>azure-mobile-apps/configuration/Data Providers - Documentation</title>
     <meta name="viewport" content="initial-scale=.75">
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,13 +29,240 @@
 <div id="main">
     
     
-    <h1 class="page-title">jsdoc/queryjs.js</h1>
+    <h1 class="page-title">azure-mobile-apps/configuration/Data Providers</h1>
     
 
     
 
 
 
+
+<section>
+
+<header>
+    
+        
+            
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Azure Mobile Apps ships with two built-in data providers -
+Microsoft SQL Server and SQLite3.</p>
+<h2>Microsoft SQL Server</h2><p>The SQL Server provider can be used with any Microsoft SQL Server installation,
+including SQL Azure. To use the provider, specify a value of <code>mssql</code> for the
+<code>provider</code> property of data configuration. The provider is also used when deployed
+to Azure used if a Data Connection has been configured in the Azure Portal for the app.</p>
+<p>The following options can be used with the SQL Server provider:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Property</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">server</td>
+<td style="text-align:left">Hostname of the database server</td>
+</tr>
+<tr>
+<td style="text-align:left">database</td>
+<td style="text-align:left">Name of the database to connect to</td>
+</tr>
+<tr>
+<td style="text-align:left">user</td>
+<td style="text-align:left">User name to connect with</td>
+</tr>
+<tr>
+<td style="text-align:left">password</td>
+<td style="text-align:left">Password for user</td>
+</tr>
+<tr>
+<td style="text-align:left">port</td>
+<td style="text-align:left">Port to connect to</td>
+</tr>
+<tr>
+<td style="text-align:left">connectionTimeout</td>
+<td style="text-align:left">Connection timeout in milliseconds</td>
+</tr>
+<tr>
+<td style="text-align:left">connectionString</td>
+<td style="text-align:left">SQL Server connection string</td>
+</tr>
+<tr>
+<td style="text-align:left">options</td>
+<td style="text-align:left">Additional connection options</td>
+</tr>
+</tbody>
+</table>
+<p>You must specify either a <code>connectionString</code> or all four of <code>server</code>, <code>database</code>,
+<code>user</code> and <code>password</code>. Options correspond with those from the
+<a href="https://github.com/patriksimek/node-mssql">mssql npm package documentation</a>.</p>
+<p>The options object can contain the following properties:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Property</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">encrypt</td>
+<td style="text-align:left">Encrypt the connection. Required and turned on automatically for SQL Azure</td>
+</tr>
+<tr>
+<td style="text-align:left">instanceName</td>
+<td style="text-align:left">Instance name of the SQL Server to connect to</td>
+</tr>
+</tbody>
+</table>
+<p>These options correspond with those from the Tedious options from the
+<a href="https://github.com/patriksimek/node-mssql">mssql documentation</a>.</p>
+<h3>Examples</h3><h4>Full example showing instantiation of an azure-mobile-apps application.</h4><pre class="prettyprint source lang-Javascript"><code>var app = require('express')(),
+    mobileApp = require('azure-mobile-apps')({
+        data: {
+            provider: 'mssql',
+            server: 'localhost',
+            database: 'myMobileAppDatabase',
+            user: 'foo',
+            password: 'bar'
+        }
+    });
+
+mobileApp.tables.add('todoitem');
+app.use(mobileApp);
+app.listen(process.env.PORT || 3000);</code></pre><h4>Separate configuration file with connection to SQL Azure database</h4><p>This file should be called <code>azureMobile.js</code> in the root directory of your app.</p>
+<pre class="prettyprint source lang-Javascript"><code>module.exports = {
+    data: {
+        provider: 'mssql',
+        server: 'myAzureSqlServer.database.windows.net',
+        database: 'myMobileAppDatabase',
+        user: 'azureUser',
+        password: 'azurePassword'
+    }
+};</code></pre><h4>Configuration using a connection string</h4><pre class="prettyprint source lang-Javascript"><code>module.exports = {
+    data: {
+        connectionString: &quot;Data Source=localhost;Initial Catalog=myMobileAppDatabase;User ID=foo;Password=bar&quot;
+    }
+};</code></pre><h2>SQLite3</h2><p>The SQLite3 data provider that ships with azure-mobile-apps is intended for local
+development purposes and not for production scenarios. The provider is intended
+to be an embedded data provider that works out of the box with zero configuration.</p>
+<p>To use the provider, the sqlite3 module must be installed as a dependency of your app:</p>
+<pre class="prettyprint source"><code>npm i sqlite3</code></pre><p>It is recommended to not use the --save option - this will ensure the sqlite3
+module is not installed when deployed to Azure - as mentioned, the provider
+is not recommended for production use.</p>
+<p>Once installed, the provider requires no configuration and is set to be the default
+data provider. The only option that can be used is the <code>filename</code> option. This
+specifies that data should be stored to a persistent file.</p>
+<h3>Examples</h3><h4>Full example using default configuration</h4><pre class="prettyprint source lang-Javascript"><code>var app = require('express')(),
+    mobileApp = require('azure-mobile-apps')();
+
+mobileApp.tables.add('todoitem');
+app.use(mobileApp);
+app.listen(process.env.PORT || 3000);</code></pre><h4>Configuration to a persistent file</h4><p>This file should be called <code>azureMobile.js</code> in the root directory of your app.</p>
+<pre class="prettyprint source lang-Javascript"><code>module.exports = {
+    data: {
+        provider: 'sqlite',
+        filename: 'mobile.sqlite'
+    }
+};</code></pre></div>
+        
+
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
