@@ -14,7 +14,7 @@ describe('azure-mobile-apps.express.integration.hooks.recordsExpire', function (
     afterEach(mobileApps.cleanUp(mobileApps.configuration()).testTable({ name: 'recordsExpire' }));
 
     it("returns records where expiry has not passed", function () {
-        setup(1000);
+        setup(1500);
         return request('post', null, 201, { id: '1' })()
             .then(request('post', null, 201, { id: '2' }))
             .then(request('get', null, 200))

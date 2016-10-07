@@ -20,7 +20,7 @@ module.exports = {
             connectionTimeout: (parseInt(properties['connection timeout'] || properties['connectiontimeout']) * 1000) || 15000,
             options: {
                 // Azure requires encryption
-                encrypt: server.indexOf('database.windows.net') > -1 || parseBoolean(properties['encrypt'])
+                encrypt: module.exports.serverRequiresEncryption(server) || parseBoolean(properties['encrypt'])
             }
         };
 
@@ -59,5 +59,11 @@ module.exports = {
                 return properties;
             }, {});
         }
+    },
+    serverRequiresEncryption: function (server) {
+        return server && (server.indexOf('database.windows.net') > -1
+            || server.indexOf('database.usgovcloudapi.net') > -1
+            || server.indexOf('database.cloudapi.de') > -1
+            || server.indexOf('database.chinacloudapi.cn') > -1);
     }
 };

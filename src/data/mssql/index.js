@@ -5,6 +5,7 @@ var statements = require('./statements'),
     execute = require('./execute'),
     dynamicSchema = require('./dynamicSchema'),
     schema = require('./schema'),
+    connectionStrings = require('../../configuration/connectionString'),
     log = require('../../logger'),
     assert = require('../../utilities/assert').argument,
     queries = require('../../query'),
@@ -70,7 +71,7 @@ module.exports = function (configuration) {
 
     function setEncryption() {
         configuration.options = configuration.options || {};
-        if(configuration.server.indexOf('database.windows.net') > -1) {
+        if(connectionStrings.serverRequiresEncryption(configuration.server)) {
             log.verbose('SQL Azure database detected - setting connection encryption');
             configuration.options.encrypt = true;
         }

@@ -37,6 +37,17 @@ describe('azure-mobile-apps.utilities/promises.configuration.connectionString', 
 
         it('parses ADO.NET connection strings with spacing issues', function () {
             expect(parse(adoNet.replace(' ', ''))).to.deep.equal(expected);
-        })
+        });
+
+        it('sets encryption for Azure databases', function () {
+            var cs = 'Server=tcp:azure-mobile-apps-test.database.windows.net,1433;Database=e2etest-v2-node;User ID=azure-mobile-apps-test@azure-mobile-apps-test;Password=abc123;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;';
+            expect(parse(cs).options.encrypt).to.be.true;
+            var cs = 'Server=tcp:azure-mobile-apps-test.database.usgovcloudapi.net,1433;Database=e2etest-v2-node;User ID=azure-mobile-apps-test@azure-mobile-apps-test;Password=abc123;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;';
+            expect(parse(cs).options.encrypt).to.be.true;
+            var cs = 'Server=tcp:azure-mobile-apps-test.database.cloudapi.de,1433;Database=e2etest-v2-node;User ID=azure-mobile-apps-test@azure-mobile-apps-test;Password=abc123;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;';
+            expect(parse(cs).options.encrypt).to.be.true;
+            var cs = 'Server=tcp:azure-mobile-apps-test.database.chinacloudapi.cn,1433;Database=e2etest-v2-node;User ID=azure-mobile-apps-test@azure-mobile-apps-test;Password=abc123;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;';
+            expect(parse(cs).options.encrypt).to.be.true;
+        });
     });
 });
