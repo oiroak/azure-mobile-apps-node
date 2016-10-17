@@ -20,7 +20,7 @@ describe('azure-mobile-apps.express.integration.auth', function () {
     });
 
     describe('when validating tokens', function () {
-        it('returns 200 for table requests with valid auth token', function () {
+        it('returns 200 for table requests with valid X-ZUMO-AUTH token', function () {
             mobileApp.configuration.auth.validateTokens = true;
             mobileApp.tables.add('todoitem');
             app.use(mobileApp);
@@ -28,6 +28,17 @@ describe('azure-mobile-apps.express.integration.auth', function () {
             return supertest(app)
                 .get('/tables/todoitem')
                 .set('x-zumo-auth', token)
+                .expect(200);
+        });
+
+        it('returns 200 for table requests with valid Authorization token', function () {
+            mobileApp.configuration.auth.validateTokens = true;
+            mobileApp.tables.add('todoitem');
+            app.use(mobileApp);
+
+            return supertest(app)
+                .get('/tables/todoitem')
+                .set('Authorization', 'Bearer ' + token)
                 .expect(200);
         });
 
@@ -41,7 +52,7 @@ describe('azure-mobile-apps.express.integration.auth', function () {
                 .expect(200);
         });
 
-        it('returns 401 for table requests with invalid auth token', function () {
+        it('returns 401 for table requests with invalid X-ZUMO-AUTH token', function () {
             mobileApp.configuration.auth.validateTokens = true;
             mobileApp.tables.add('todoitem');
             app.use(mobileApp);
@@ -49,6 +60,28 @@ describe('azure-mobile-apps.express.integration.auth', function () {
             return supertest(app)
                 .get('/tables/todoitem')
                 .set('x-zumo-auth', 'invalid token')
+                .expect(401);
+        });
+
+        it('returns 401 for table requests with invalid (non-bearer) Authorization token', function () {
+            mobileApp.configuration.auth.validateTokens = true;
+            mobileApp.tables.add('todoitem');
+            app.use(mobileApp);
+
+            return supertest(app)
+                .get('/tables/todoitem')
+                .set('Authorization', 'invalid token')
+                .expect(401);
+        });
+
+        it('returns 401 for table requests with invalid (bearer) Authorization token', function () {
+            mobileApp.configuration.auth.validateTokens = true;
+            mobileApp.tables.add('todoitem');
+            app.use(mobileApp);
+
+            return supertest(app)
+                .get('/tables/todoitem')
+                .set('Authorization', 'Bearer invalidtoken')
                 .expect(401);
         });
 
@@ -96,13 +129,23 @@ describe('azure-mobile-apps.express.integration.auth', function () {
     });
 
     describe('when decoding tokens', function () {
-        it('returns 200 for table requests with valid auth token', function () {
+        it('returns 200 for table requests with valid X-ZUMO-AUTH token', function () {
             mobileApp.tables.add('todoitem');
             app.use(mobileApp);
 
             return supertest(app)
                 .get('/tables/todoitem')
                 .set('x-zumo-auth', token)
+                .expect(200);
+        });
+
+        it('returns 200 for table requests with valid Authorization token', function () {
+            mobileApp.tables.add('todoitem');
+            app.use(mobileApp);
+
+            return supertest(app)
+                .get('/tables/todoitem')
+                .set('Authorization', 'Bearer ' + token)
                 .expect(200);
         });
 
@@ -115,13 +158,33 @@ describe('azure-mobile-apps.express.integration.auth', function () {
                 .expect(200);
         });
 
-        it('returns 401 for table requests with invalid auth token', function () {
+        it('returns 401 for table requests with invalid X-ZUMO-AUTH token', function () {
             mobileApp.tables.add('todoitem');
             app.use(mobileApp);
 
             return supertest(app)
                 .get('/tables/todoitem')
                 .set('x-zumo-auth', 'invalid token')
+                .expect(401);
+        });
+
+        it('returns 401 for table requests with invalid (non-bearer) Authorization token', function () {
+            mobileApp.tables.add('todoitem');
+            app.use(mobileApp);
+
+            return supertest(app)
+                .get('/tables/todoitem')
+                .set('Authorization', 'invalid token')
+                .expect(401);
+        });
+
+        it('returns 401 for table requests with invalid (bearer) Authorization token', function () {
+            mobileApp.tables.add('todoitem');
+            app.use(mobileApp);
+
+            return supertest(app)
+                .get('/tables/todoitem')
+                .set('Authorization', 'Bearer invalidtoken')
                 .expect(401);
         });
 
@@ -143,13 +206,23 @@ describe('azure-mobile-apps.express.integration.auth', function () {
                 .expect(401);
         });
 
-        it('returns 200 for table requests against authorized table with valid token', function () {
+        it('returns 200 for table requests against authorized table with valid X-ZUMO-AUTH token', function () {
             mobileApp.tables.add('todoitem', { authorize: true });
             app.use(mobileApp);
 
             return supertest(app)
                 .get('/tables/todoitem')
                 .set('x-zumo-auth', token)
+                .expect(200);
+        });
+
+        it('returns 200 for table requests against authorized table with valid Authorization token', function () {
+            mobileApp.tables.add('todoitem', { authorize: true });
+            app.use(mobileApp);
+
+            return supertest(app)
+                .get('/tables/todoitem')
+                .set('Authorization', 'Bearer ' + token)
                 .expect(200);
         });
 
@@ -164,7 +237,7 @@ describe('azure-mobile-apps.express.integration.auth', function () {
         });
     });
 
-    it('attaches user object to context object', function () {
+    it('attaches user object to context object (X-ZUMO-AUTH)', function () {
         var table = mobileApp.table();
         table.authorize = true;
         table.read(function (context) {
@@ -182,7 +255,25 @@ describe('azure-mobile-apps.express.integration.auth', function () {
             });
     });
 
-    it('attaches getIdentity function to user object', function () {
+    it('attaches user object to context object (Authorization)', function () {
+        var table = mobileApp.table();
+        table.authorize = true;
+        table.read(function (context) {
+            return [context.user.id];
+        });
+        mobileApp.tables.add('todoitem', table);
+        app.use(mobileApp);
+
+        return supertest(app)
+            .get('/tables/todoitem')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(200)
+            .then(function (response) {
+                expect(response.body).to.deep.equal(['Facebook:someuserid@hotmail.com']);
+            });
+    });
+
+    it('attaches getIdentity function to user object (X-ZUMO-AUTH)', function () {
         var table = mobileApp.table();
         table.authorize = true;
         table.read(function (context) {
@@ -194,6 +285,24 @@ describe('azure-mobile-apps.express.integration.auth', function () {
         return supertest(app)
             .get('/tables/todoitem')
             .set('x-zumo-auth', token)
+            .expect(200)
+            .then(function (response) {
+                expect(response.body).to.deep.equal([{ provider: 'provider' }]);
+            });
+    });
+
+    it('attaches getIdentity function to user object (Authorization)', function () {
+        var table = mobileApp.table();
+        table.authorize = true;
+        table.read(function (context) {
+            return [context.user.getIdentity('provider')];
+        });
+        mobileApp.tables.add('todoitem', table);
+        app.use(mobileApp);
+
+        return supertest(app)
+            .get('/tables/todoitem')
+            .set('Authorization', 'Bearer ' + token)
             .expect(200)
             .then(function (response) {
                 expect(response.body).to.deep.equal([{ provider: 'provider' }]);
