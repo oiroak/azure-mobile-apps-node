@@ -4,3 +4,4 @@ jsdoc/out
 azureMobile.js
 *.sqlite
 *.sqlite-journal
+yarn.lock
