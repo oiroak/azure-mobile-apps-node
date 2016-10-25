@@ -53,6 +53,9 @@ module.exports = function (configuration) {
             .use(middleware('crossOrigin'))
             .use(configuration.authStubRoute || '/.auth/login/:provider', middleware('authStub'));
 
+    if(configuration.statusEndpoint)
+        mobileApp.use('/status', middleware('status'));
+
     mobileApp
         .use(middleware('version'))
         .use(middleware('createContext'))
