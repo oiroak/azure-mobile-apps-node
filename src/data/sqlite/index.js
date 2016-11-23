@@ -9,7 +9,7 @@ var statements = require('./statements'),
     connections = require('./connections'),
     log = require('../../logger'),
     queries = require('../../query'),
-    uuid = require('node-uuid');
+    uuid = require('uuid');
 
 module.exports = function (configuration) {
     configuration = configuration || {};

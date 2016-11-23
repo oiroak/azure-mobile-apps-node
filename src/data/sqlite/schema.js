@@ -8,7 +8,7 @@ module.exports = function (connection, serialize) {
         columns = require('./columns')(connection, serialize),
         promises = require('../../utilities/promises'),
         log = require('../../logger'),
-        uuid = require('node-uuid');
+        uuid = require('uuid');
 
     var api = {
         initialize: function (table) {
