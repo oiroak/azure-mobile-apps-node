@@ -9,7 +9,7 @@ var statements = require('./statements'),
     log = require('../../logger'),
     assert = require('../../utilities/assert').argument,
     queries = require('../../query'),
-    uuid = require('node-uuid');
+    uuid = require('uuid');
 
 module.exports = function (configuration) {
     assert(configuration, 'Data configuration was not provided.');

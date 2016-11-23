@@ -9,7 +9,7 @@ module.exports = function (configuration) {
         promises = require('../../utilities/promises'),
         log = require('../../logger'),
         helpers = require('./helpers'),
-        uuid = require('node-uuid');
+        uuid = require('uuid');
 
     var api = {
         initialize: function (table) {
