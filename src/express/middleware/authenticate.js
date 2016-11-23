@@ -29,31 +29,39 @@ module.exports = function (configuration) {}
     });
 };
 */
-module.exports = function (configuration) {
-    if(configuration && configuration.auth && Object.keys(configuration.auth).length > 0) {
+module.exports = function(configuration) {
+    if (configuration && configuration.auth && Object.keys(configuration.auth).length > 0) {
         var authUtils = auth(configuration.auth);
 
-        return function (req, res, next) {
-            var token = req.get('x-zumo-auth');
+        return function(req, res, next) {
+            // If the X-ZUMO-AUTH header is there, use that.  If the X-ZUMO-AUTH
+            // header is not there, then look for a Bearer Authorization header.
+            var token = req.get('x-zumo-auth') || req.get('authorization');
 
-            if(token) {
+            if (token) {
+                // Check to see if the token has the bearer in the front - Authorization
+                // will, X-ZUMO-AUTH won't.  Remove it if present
+                if (token.toLowerCase().substr(0, 7) === 'bearer ') {
+                    token = token.substr(7);
+                }
+
                 req.azureMobile = req.azureMobile || {};
                 req.azureMobile.auth = authUtils;
 
-                if(configuration.auth.validateTokens !== false) {
+                if (configuration.auth.validateTokens !== false) {
                     authUtils.validate(token)
-                        .then(function (user) {
+                        .then(function(user) {
                             req.azureMobile.user = user;
                             next();
                         })
-                        .catch(function (error) {
+                        .catch(function(error) {
                             res.status(401).send(error);
                         });
                 } else {
                     try {
                         req.azureMobile.user = authUtils.decode(token);
                         next();
-                    } catch(error) {
+                    } catch (error) {
                         res.status(401).send(error);
                     }
                 }
@@ -62,7 +70,7 @@ module.exports = function (configuration) {
             }
         };
     } else {
-        return function (req, res, next) {
+        return function(req, res, next) {
             next();
         };
     }
