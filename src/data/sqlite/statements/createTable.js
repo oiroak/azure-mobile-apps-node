@@ -5,6 +5,7 @@ var helpers = require('../helpers');
 
 module.exports = function (tableConfig, columns) {
     var tableName = helpers.formatTableName(tableConfig),
+        // systemProperties is used to ensure columns are correct type - include the deleted column here
         systemProperties = helpers.getSystemPropertiesDDL(true);
 
     return {
