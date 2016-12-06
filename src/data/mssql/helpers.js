@@ -139,13 +139,14 @@ var helpers = module.exports = {
         }
     },
 
-    getSystemPropertiesDDL: function () {
-        return {
+    getSystemPropertiesDDL: function (softDelete) {
+        var columns = {
             version: 'version ROWVERSION NOT NULL',
             createdAt: 'createdAt DATETIMEOFFSET(7) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(7),SYSUTCDATETIME(),0)',
-            updatedAt: 'updatedAt DATETIMEOFFSET(7) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(7),SYSUTCDATETIME(),0)',
-            deleted: 'deleted bit NOT NULL DEFAULT 0'
-        }
+            updatedAt: 'updatedAt DATETIMEOFFSET(7) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(7),SYSUTCDATETIME(),0)'
+        };
+        if(softDelete) columns.deleted = 'deleted bit NOT NULL DEFAULT 0';
+        return columns;
     },
 
     getSystemProperties: function () {

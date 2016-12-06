@@ -95,13 +95,14 @@ module.exports = {
         }
     },
 
-    getSystemPropertiesDDL: function () {
-        return {
+    getSystemPropertiesDDL: function (softDelete) {
+        var columns = {
             version: "version TEXT NOT NULL DEFAULT 1",
             createdAt: "createdAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%dT%H:%M:%fZ', 'now'))",
-            updatedAt: "updatedAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%dT%H:%M:%fZ', 'now'))",
-            deleted: "deleted INTEGER NOT NULL DEFAULT 0"
-        }
+            updatedAt: "updatedAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        };
+        if(softDelete) columns.deleted = "deleted INTEGER NOT NULL DEFAULT 0";
+        return columns;
     },
 
     toBase64: function(value) {

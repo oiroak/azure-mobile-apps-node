@@ -25,7 +25,7 @@ describe('azure-mobile-apps.express.integration.swagger', function () {
 
     it("generates basic API definitions for tables", function () {
         mobileApp = mobileApps({ swagger: true });
-        mobileApp.tables.add('swagger');
+        mobileApp.tables.add('swagger', { softDelete: true });
         app.use(mobileApp);
 
         return mobileApp.tables.initialize().then(function () {

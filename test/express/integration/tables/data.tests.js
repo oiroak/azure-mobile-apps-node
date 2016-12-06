@@ -13,7 +13,8 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
     beforeEach(function (done) {
         data(mobileApps.configuration())({
             name: 'integration',
-            columns: { string: 'string', number: 'number', bool: 'boolean' }
+            columns: { string: 'string', number: 'number', bool: 'boolean' },
+            softDelete: true
         }).initialize().then(done);
     });
 

@@ -5,7 +5,7 @@ var helpers = require('../helpers');
 
 module.exports = function (tableConfig, columns) {
     var tableName = helpers.formatTableName(tableConfig),
-        systemProperties = helpers.getSystemPropertiesDDL();
+        systemProperties = helpers.getSystemPropertiesDDL(true);
 
     return {
         sql: 'CREATE TABLE ' + tableName + ' (' + columnSql() + ')'

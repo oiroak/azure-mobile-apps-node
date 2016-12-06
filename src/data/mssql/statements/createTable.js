@@ -10,7 +10,7 @@ module.exports = function (tableConfig, item) {
         pkType = tableConfig.autoIncrement ? 'INT' : helpers.getSqlType((!item || item.id === undefined || item.id === null) ? '' : item.id, true),
         pkColumnSql = '[id] ' + pkType + ' NOT NULL' + (tableConfig.autoIncrement ? ' IDENTITY (1, 1)' : '') + ' PRIMARY KEY',
 
-        systemProperties = [pkColumnSql].concat(utilities.object.values(helpers.getSystemPropertiesDDL())),
+        systemProperties = [pkColumnSql].concat(utilities.object.values(helpers.getSystemPropertiesDDL(tableConfig.softDelete))),
         columns = utilities.assign(itemColumnsSql(), predefinedColumnsSql()),
         columnSql = systemProperties.concat(utilities.object.values(columns)).join(',');
 

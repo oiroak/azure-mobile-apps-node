@@ -9,7 +9,7 @@ var config = require('../../appFactory').configuration().data,
     promises = require('../../../src/utilities/promises'),
     helpers = require('../../../src/data/mssql/helpers'),
     expect = require('chai').use(require('chai-subset')).use(require('chai-as-promised')).expect,
-    table = { name: 'dynamicSchema' };
+    table = { name: 'dynamicSchema', softDelete: true };
 
 // these tests rely on specific queries like getColumns and getIndexes from the mssql provider
 if(config.provider === 'mssql') {
@@ -152,7 +152,7 @@ if(config.provider === 'mssql') {
         });
 
         it("creates predefined columns", function () {
-            var table = { name: 'dynamicSchema', columns: {
+            var table = { name: 'dynamicSchema', softDelete: true, columns: {
                     string: 'string',
                     number: 'number',
                     bool: 'boolean',
@@ -180,7 +180,7 @@ if(config.provider === 'mssql') {
         });
 
         it("uses predefined column types over item types when duplicated with different casing", function () {
-            var table = { name: 'dynamicSchema', columns: { string: 'string' } },
+            var table = { name: 'dynamicSchema', softDelete: true, columns: { string: 'string' } },
                 item = { id: '1', String: 1 };
 
             return dynamicSchema(table).execute(config, statements.insert(table, item), item)

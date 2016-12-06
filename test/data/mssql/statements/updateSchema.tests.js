@@ -19,6 +19,11 @@ describe('azure-mobile-apps.data.mssql.statements', function () {
 
         it('generates system properties if missing', function () {
             var statement = updateSchema({ name: 'table' }, [{ name: 'id' }], { id: 1, text: 'test' });
+            expect(statement.sql).to.equal('ALTER TABLE [dbo].[table] ADD [text] NVARCHAR(MAX) NULL,version ROWVERSION NOT NULL,createdAt DATETIMEOFFSET(7) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(7),SYSUTCDATETIME(),0),updatedAt DATETIMEOFFSET(7) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(7),SYSUTCDATETIME(),0)');
+        });
+
+        it('generates deleted column if specified and missing', function () {
+            var statement = updateSchema({ name: 'table', softDelete: true }, [{ name: 'id' }], { id: 1, text: 'test' });
             expect(statement.sql).to.equal('ALTER TABLE [dbo].[table] ADD [text] NVARCHAR(MAX) NULL,version ROWVERSION NOT NULL,createdAt DATETIMEOFFSET(7) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(7),SYSUTCDATETIME(),0),updatedAt DATETIMEOFFSET(7) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(7),SYSUTCDATETIME(),0),deleted bit NOT NULL DEFAULT 0');
         });
 
