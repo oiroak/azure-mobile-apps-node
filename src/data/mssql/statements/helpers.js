@@ -26,7 +26,7 @@ var helpers = module.exports = {
             return target;
         }, { sql: '', parameters: [], multiple: true, transform: transform });
     },
-    checkConcurrencyAndTranslate: function (results, originalItem) {
+    checkConcurrencyAndTranslate: function (results, originalItem, undeleting) {
         var recordsAffected = results[0][0].recordsAffected,
             records = results[1],
             item;
@@ -48,6 +48,11 @@ var helpers = module.exports = {
         // this would not strictly be a concurrency violation, but there is no simple way to determine if it was because
         // the version column didn't match or the rest of the query filtered out all records
         if(recordsAffected === 0) {
+            // we want to 404 if the item didn't exist or was filtered, 
+            // or if the item has been soft deleted (unless we're undeleting)
+            if(!item || (item.deleted && !undeleting))
+                throw errors.notFound('No records were updated');
+
             var error = errors.concurrency('No records were updated');
             error.item = item;
             throw error;

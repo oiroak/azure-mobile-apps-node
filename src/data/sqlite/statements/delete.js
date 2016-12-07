@@ -12,7 +12,9 @@ module.exports = function (table, query, version) {
         filterClause = format.filter(queries.toOData(query)),
         result,
         deleteStmt = {
-            sql: "DELETE FROM " + tableName + " WHERE " + filterClause.sql,
+            sql: table.softDelete 
+                ? "UPDATE " + tableName + " SET [deleted] = 1 WHERE " + filterClause.sql + " AND [deleted] = 0"
+                : "DELETE FROM " + tableName + " WHERE " + filterClause.sql,
             parameters: helpers.mapParameters(filterClause.parameters),
             transform: transforms.ignoreResults
         },
@@ -27,6 +29,10 @@ module.exports = function (table, query, version) {
             sql: "SELECT changes() AS recordsAffected",
             transform: function (rows) {
                 if(rows[0].recordsAffected === 0) {
+                    // we want to 404 if the item didn't exist, was filtered or soft deleted
+                    if(!result || result.deleted)
+                        throw errors.notFound('No records were updated');
+
                     var error = errors.concurrency('No records were updated');
                     error.item = result;
                     throw error;
@@ -34,9 +40,6 @@ module.exports = function (table, query, version) {
                 return result;
             }
         };
-
-    if (table.softDelete)
-        deleteStmt.sql = "UPDATE " + tableName + " SET [deleted] = 1 WHERE " + filterClause.sql + " AND [deleted] = 0";
 
     if (version) {
         deleteStmt.sql += " AND [version] = @version";
