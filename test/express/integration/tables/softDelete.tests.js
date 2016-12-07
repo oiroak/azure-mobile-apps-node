@@ -37,7 +37,7 @@ describe('azure-mobile-apps.express.integration.tables.softDelete', function () 
             })
             .then(function (results) {
                 expect(results.body.length).to.equal(0);
-            })
+            });
     });
 
     it('deleted records are returned when requested', function () {
@@ -60,7 +60,7 @@ describe('azure-mobile-apps.express.integration.tables.softDelete', function () 
             })
             .then(function (results) {
                 expect(results.body.length).to.equal(1);
-            })
+            });
     });
 
     it('deleted records can be undeleted', function () {
@@ -88,6 +88,41 @@ describe('azure-mobile-apps.express.integration.tables.softDelete', function () 
             })
             .then(function (results) {
                 expect(results.body.length).to.equal(1);
+            });
+    });
+
+    it('deleted records cannot be modified', function () {
+        mobileApp.tables.add('softDelete', { softDelete: true });
+        app.use(mobileApp);
+
+        return supertest(app)
+            .post('/tables/softDelete')
+            .send({ id: '1', value: 'test' })
+            .expect(201)
+            .then(function () {
+                return supertest(app)
+                    .delete('/tables/softDelete/1')
+                    .expect(200);
             })
-    })
+            .then(function () {
+                return supertest(app)
+                    .delete('/tables/softDelete/1')
+                    .expect(404);
+            })
+            .then(function () {
+                return supertest(app)
+                    .patch('/tables/softDelete/1')
+                    .send({ value: 'test2' })
+                    .expect(404);
+            })
+            .then(function () {
+                return supertest(app)
+                    .get('/tables/softDelete?__includeDeleted=true')
+                    .expect(200);
+            })
+            .then(function (results) {
+                expect(results.body.length).to.equal(1);
+                expect(results.body[0].value).to.equal('test');
+            });
+    });
 });

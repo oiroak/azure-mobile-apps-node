@@ -57,24 +57,6 @@ describe('azure-mobile-apps.express.integration.tables.operations', function () 
             .expect(200);
     });
 
-    it('applies filters to results of update operations', function () {
-        return supertest(app)
-            .delete('/tables/operations/1')
-            .expect(200)
-            .then(function () {
-                return supertest(app)
-                    .patch('/tables/operations/1')
-                    .send({ userId: '2' })
-                    .expect(200)
-            })
-            .then(function () {
-                // this succeeds in the test below, so we know the above update actually succeeded
-                return supertest(app)
-                    .post('/tables/operations/1')
-                    .expect(404)
-            });
-    });
-
     it('allows filters on deletes and behaves as normal when not filtered', function () {
         return supertest(app)
             .delete('/tables/operations/1')

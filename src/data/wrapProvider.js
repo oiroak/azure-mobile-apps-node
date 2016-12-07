@@ -26,6 +26,7 @@ module.exports = function (provider, table, context) {
         update: function (item, query) {
             assert(item, 'An item to update was not provided');
             query = createQuery(query);
+            if(table.softDelete) query.where({ deleted: false });
             var newContext = createContext('update', query, item);
             return tableAccess.update(apply.transforms(table, item, newContext), apply.filters(table, query, newContext))
                 .then(apply.hooks(newContext));
@@ -73,8 +74,13 @@ module.exports = function (provider, table, context) {
     }
 
     function createQuery(query) {
-        if(query && query.constructor !== queries.Query)
-            query = queries.create(table.name).where(query);
-        return query;
+        if(query && query.constructor === queries.Query)
+            return query;
+
+        var newQuery = queries.create(table.name);
+        if(query)
+            newQuery.where(query);
+
+        return newQuery;
     }
 };

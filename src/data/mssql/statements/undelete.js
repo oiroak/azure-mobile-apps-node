@@ -22,6 +22,8 @@ module.exports = function (table, query, version) {
         sql: sql,
         parameters: parameters,
         multiple: true,
-        transform: helpers.statements.checkConcurrencyAndTranslate
+        transform: function (results) {
+            return helpers.statements.checkConcurrencyAndTranslate(results, undefined, true);
+        }
     };
 };
