@@ -12,15 +12,14 @@ describe('azure-mobile-apps.data.sqlite.columns.combine', function () {
                 { name: 'id', type: 'string' },
                 { name: 'createdAt', type: 'date' },
                 { name: 'updatedAt', type: 'date' },
-                { name: 'version', type: 'string' },
-                { name: 'deleted', type: 'boolean' }
+                { name: 'version', type: 'string' }
             ]);
     });
 
     it("constructs array of columns from predefined columns and item", function () {
         expect(combine(
             undefined,
-            { columns: { 'p1': 'string', 'string': 'string', 'number': 'string' } },
+            { columns: { 'p1': 'string', 'string': 'string', 'number': 'string' }, softDelete: true },
             { string: '', number: 1, boolean: false, date: new Date() }
         )).to.deep.equal([
             { name: 'p1', type: 'string' },

@@ -27,7 +27,7 @@ module.exports = function (tableConfig, existingColumns, item) {
     }
 
     function systemPropertiesSql() {
-        var columns = helpers.getSystemPropertiesDDL();
+        var columns = helpers.getSystemPropertiesDDL(tableConfig.softDelete);
         return Object.keys(columns).reduce(function (sql, column) {
             sql[column.toLowerCase()] = columns[column];
             return sql;

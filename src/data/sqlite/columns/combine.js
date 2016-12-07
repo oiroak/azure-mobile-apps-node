@@ -53,12 +53,13 @@ module.exports = function (existingColumns, table, item) {
     }
 
     function reservedColumns() {
-        return {
+        var columns = {
             id: table.autoIncrement ? 'number' : 'string',
             createdAt: 'date',
             updatedAt: 'date',
-            version: 'string',
-            deleted: 'boolean'
+            version: 'string'
         };
+        if(table.softDelete) columns.deleted = 'boolean';
+        return columns;
     }
 }
