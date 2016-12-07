@@ -35,7 +35,7 @@ module.exports = function (table) {
         next();
 
         function topValue() {
-            var top = Number.parseInt(req.query.$top);
+            var top = parseInt(req.query.$top);
             
             if(table.maxTop && top > table.maxTop)
                 throw errors.badRequest("You cannot request more than " + table.maxTop + " records");
