@@ -16,7 +16,7 @@ describe('azure-mobile-apps.express.integration.tables.link', function () {
         mobileApp = mobileApps({ pageSize: 2, data: { provider: 'memory' } });
     });
 
-    it('adds Link header when top > pageSize & results.length === pageSize', function () {
+    it('adds Link header when top is not specified and results.length === pageSize', function () {
         mobileApp = mobileApps({ pageSize: 1, data: { provider: 'memory' } });
         mobileApp.tables.add('headers');
         app.use(mobileApp);
@@ -26,7 +26,7 @@ describe('azure-mobile-apps.express.integration.tables.link', function () {
             .expect(201)
             .then(function () {
                 return supertest(app)
-                    .get('/tables/headers?$top=2')
+                    .get('/tables/headers')
                     .expect(200)
                     .expect(function (res) {
                         expect(res.headers.link).to.contain('?%24top=1&%24skip=1; rel=next');
@@ -58,25 +58,7 @@ describe('azure-mobile-apps.express.integration.tables.link', function () {
             });
     });
 
-    it('adds no Link header when top <== pageSize', function () {
-        mobileApp.tables.add('headers');
-        app.use(mobileApp);
-        return supertest(app)
-            .post('/tables/headers')
-            .send({ id: '1' })
-            .expect(201)
-            .then(function () {
-                return supertest(app)
-                    .get('/tables/headers?$top=1')
-                    .expect(200)
-                    .expect(function (res) {
-                        // no link, because $top < pageSize
-                        expect(res.headers.link).to.be.undefined;
-                    });
-            });
-    });
-
-    it('adds no Link header when top === result.count', function () {
+    it('adds no Link header when top < result.count', function () {
         mobileApp.tables.add('headers');
         app.use(mobileApp);
         return supertest(app)
@@ -88,7 +70,7 @@ describe('azure-mobile-apps.express.integration.tables.link', function () {
                     .get('/tables/headers?$top=2')
                     .expect(200)
                     .expect(function (res) {
-                        // no link, because $top < pageSize
+                        // no link, because $top < result.count
                         expect(res.headers.link).to.be.undefined;
                     });
             });
