@@ -25,29 +25,25 @@ module.exports = function (table) {
             context.query.id = context.id;
             context.query.single = true;
         } else {
-            enforceMaxTop();
-            context.query = queries.fromRequest(req);
+            context.query = queries.fromRequest(req).take(topValue());
         }
 
         var etag = req.get('if-match');
         if(etag)
             context.version = etag;
 
-        // set take to the min of $top and pageSize, can be overridden in server middleware
-        context.query = context.query.take(Math.min(table.pageSize, req.query.$top));
-
         next();
 
-        function enforceMaxTop() {
-            if(table.maxTop) {
-                var top = req.query.$top;
+        function topValue() {
+            var top = Number.parseInt(req.query.$top);
+            
+            if(table.maxTop && top > table.maxTop)
+                throw errors.badRequest("You cannot request more than " + table.maxTop + " records");
 
-                if(top > table.maxTop)
-                    throw errors.badRequest("You cannot request more than " + table.maxTop + " records");
-
-                if(!top)
-                    req.query.$top = table.maxTop
-            }
+            if(!top)
+                top = table.pageSize || 50;
+            
+            return top;
         }
     };
 };

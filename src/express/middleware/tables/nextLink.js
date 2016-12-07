@@ -21,11 +21,9 @@ var nextLink = module.exports = function (table) {
             var results = res.results.results || res.results,
                 query = queries.toOData(req.azureMobile.query);
 
-            // Add link if requested $top was more than result count AND
-            // if query.take (equal to table.pageSize or overridden by server middleware) is equal to result count
-            if (req.query.$top > results.length && results.length === query.take) {
+            if (results.length === query.take) {
                 var skip = (query.skip || 0) + results.length,
-                    top = req.query.$top - results.length;
+                    top = query.take;
                 res.set('Link', nextLink.createLinkHeader(req, top, skip));
             }
         }
