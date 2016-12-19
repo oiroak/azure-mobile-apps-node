@@ -126,6 +126,32 @@ describe('azure-mobile-apps.express.integration.auth', function () {
                 .set('x-zumo-auth', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ')
                 .expect(401);
         });
+
+        it('returns 401 for authenticated custom API with no token', function () {
+            mobileApp.configuration.auth.validateTokens = true;
+            mobileApp.api.add('test', { 
+                get: function (req, res) { res.status(200).end(); },
+                access: 'authenticated'
+            });
+            app.use(mobileApp);
+
+            return supertest(app)
+                .get('/api/test')
+                .expect(401);
+        });
+
+        it('returns 401 for authenticated custom API method with no token', function () {
+            var api = { get: function (req, res) { res.status(200).end(); } };
+            api.get.access = 'authenticated';
+
+            mobileApp.configuration.auth.validateTokens = true;
+            mobileApp.api.add('test', api);
+            app.use(mobileApp);
+
+            return supertest(app)
+                .get('/api/test')
+                .expect(401);
+        });
     });
 
     describe('when decoding tokens', function () {

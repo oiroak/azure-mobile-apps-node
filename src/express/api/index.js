@@ -55,6 +55,8 @@ module.exports = function (configuration) {
         var apiRouter = express.Router(),
             routeWasAdded = false;
 
+        importDefinition.setAccess(definition);
+
         Object.getOwnPropertyNames(definition).forEach(function (method) {
             var middleware = getDefinedMiddleware(definition[method]);
             if (types.isFunction(middleware) || types.isArray(middleware)) {
@@ -84,7 +86,7 @@ module.exports = function (configuration) {
             return notAllowed(method);
         }
 
-        if (definition[method].authorize) {
+        if (definition[method].authorize || (definition.authorize && definition[method].authorize !== false)) {
             logger.verbose("Adding authorization to " + method + " for api " + definition.name);
             middleware = [authorize].concat(middleware);
         }
