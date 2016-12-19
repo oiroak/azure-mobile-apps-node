@@ -1,6 +1,6 @@
 {
   "name": "azure-mobile-apps",
-  "version": "3.0.2",
+  "version": "4.0.0",
   "description": "Build mobile apps with data storage, push notifications and offline sync in minutes.",
   "main": "src/index.js",
   "typings": "typings/main.d.ts",
