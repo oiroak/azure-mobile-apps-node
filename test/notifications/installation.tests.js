@@ -83,6 +83,13 @@ describe('azure-mobile-apps.notifications.installation', function () {
             });
     });
 
+    it('filters empty tags', function () {
+        return notifs.putInstallation('empty', installation, 'user')
+            .then(function (res) {
+                expect(clientStub.createOrUpdateInstallation.args[0][0].tags).to.deep.equal(['tag1', '_UserId:user']);
+            });
+    });
+
     function createNHClientStub () {
         var stub = {};
         stub.createOrUpdateInstallation = sinon.stub().yields(undefined, 'ok');
@@ -93,6 +100,8 @@ describe('azure-mobile-apps.notifications.installation', function () {
         stub.listRegistrationsByTag.withArgs('$InstallationId:{loop}')
                 .onCall(0).yields(undefined, createTagRegistrations(0, 100))
                 .onCall(1).yields(undefined, createTagRegistrations(100, 1));
+        stub.listRegistrationsByTag.withArgs('$InstallationId:{empty}')
+                .onCall(0).yields(undefined, [{ Tag: 'tag1' }, { Tag: undefined } ]);
 
         return stub;
     }

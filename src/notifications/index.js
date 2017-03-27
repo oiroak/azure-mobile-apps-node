@@ -58,7 +58,7 @@ module.exports = function (configuration) {
     function addUserTag(tags, userId) {
         if (userId) {
             tags = tags.filter(function (tag) {
-                return !(tag && tag.indexOf(UserIdTagPrefix) === 0);
+                return tag && tag.indexOf(UserIdTagPrefix) !== 0;
             });
             tags.push(UserIdTagPrefix + userId);
         }
