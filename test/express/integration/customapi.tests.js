@@ -14,11 +14,16 @@ var expect = require('chai').expect,
 
     mobileApp.api.import('express/files/api/customapi');
     mobileApp.api.import('express/files/api/authapi');
+    mobileApp.api.import('express/files/api/asyncapi');
     app.use(mobileApp);
 
 describe('azure-mobile-apps.express.integration.customapi', function () {
     it('returns 200 on existing verb', function () {
         return request(app).get('/api/customapiname').expect(200);
+    });
+
+    it('returns 200 on existing verb created with an async function', function () {
+        return request(app).get('/api/asyncapi').expect(200);
     });
 
     it('returns 404 on non-existent verb', function () {

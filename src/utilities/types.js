@@ -100,6 +100,10 @@ var types = module.exports = {
         return types.classof(o) === 'function';
     },
 
+    isAsyncFunction: function (o) {
+        return types.classof(o) === 'asyncfunction';
+    },
+
     isString: function (o) {
         return types.classof(o) === 'string';
     },
