@@ -22,7 +22,7 @@ describe('azure-mobile-apps.express.integration.customapi', function () {
         return request(app).get('/api/customapiname').expect(200);
     });
 
-    if(process.version.split('.')[0] === 'v7') {
+    if(process.version.substring(1).split('.')[0] >= 7) {
         it('returns 200 on existing verb created with an async function', function () {
             return request(app).get('/api/asyncapi').expect(200);
         });
