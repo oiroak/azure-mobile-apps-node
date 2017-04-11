@@ -59,7 +59,7 @@ module.exports = function (configuration) {
 
         Object.getOwnPropertyNames(definition).forEach(function (method) {
             var middleware = getDefinedMiddleware(definition[method]);
-            if (types.isFunction(middleware) || types.isArray(middleware)) {
+            if (types.isFunction(middleware) || types.isArray(middleware) || types.isAsyncFunction(middleware)) {
                 if (supportsVerb(method)) {
                     routeWasAdded = true;
                     logger.verbose("Adding method " + method + " to api " + definition.name);
