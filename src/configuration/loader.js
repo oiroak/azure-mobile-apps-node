@@ -45,17 +45,18 @@ function loadModule(target, targetPath) {
     if(supportedExtensions.indexOf(extension) > -1) {
         try {
             loadedModule = require(targetPath);
+
+            logger.silly('Loaded ' + targetPath);
+
+            merge.getConflictingProperties(targetModule, loadedModule).forEach(function (conflict) {
+                logger.warn('Property \'' + conflict + '\' in module ' + moduleName + ' overwritten by JSON configuration');
+            });
+            // due to lexicographic ordering, .js is loaded before .json
+            target[moduleName] = merge.mergeObjects(targetModule, loadedModule);
         } catch (err) {
             logger.error('Unable to load ' + targetPath, err);
-            throw err;
+            // throw err;
         }
-        logger.silly('Loaded ' + targetPath);
-
-        merge.getConflictingProperties(targetModule, loadedModule).forEach(function (conflict) {
-            logger.warn('Property \'' + conflict + '\' in module ' + moduleName + ' overwritten by JSON configuration');
-        });
-        // due to lexicographic ordering, .js is loaded before .json
-        target[moduleName] = merge.mergeObjects(targetModule, loadedModule);
     }
 
     return target;

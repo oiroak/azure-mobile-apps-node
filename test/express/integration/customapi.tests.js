@@ -22,9 +22,11 @@ describe('azure-mobile-apps.express.integration.customapi', function () {
         return request(app).get('/api/customapiname').expect(200);
     });
 
-    it('returns 200 on existing verb created with an async function', function () {
-        return request(app).get('/api/asyncapi').expect(200);
-    });
+    if(process.version.split('.')[0] === 'v7') {
+        it('returns 200 on existing verb created with an async function', function () {
+            return request(app).get('/api/asyncapi').expect(200);
+        });
+    }
 
     it('returns 404 on non-existent verb', function () {
         return request(app).post('/api/customapiname').expect(404);
