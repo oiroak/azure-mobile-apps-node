@@ -28,9 +28,9 @@ Express 4.x is currently the only supported platform.
 module.exports = function (configuration, environment) {
     return module.exports.create(loadConfiguration.from()
         .defaults(configuration)
-        .file()
         .environment(environment)
         .settingsJson()
+        .file()
         .object(configuration)
         .commandLine()
         .apply());
