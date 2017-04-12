@@ -30,9 +30,4 @@ describe('azure-mobile-apps.express.middleware.notifications', function () {
             }
         });
     });
-
-    it('returns empty router if no config', function () {
-        var router = middleware({ notifications: {}});
-        expect(router.stack).to.have.length(0);
-    });
 });

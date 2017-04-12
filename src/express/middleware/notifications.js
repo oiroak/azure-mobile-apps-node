@@ -6,8 +6,8 @@
 @description Creates middleware that exposes routes for registering devices
 for push notifications.
 */
+
 var express = require('express'),
-    bodyParser = require('body-parser'),
     notifications = require('../../notifications'),
     log = require('../../logger');
 
@@ -17,16 +17,12 @@ Create a new instance of the notifications middleware
 */
 module.exports = function (configuration) {
     var router = express.Router(),
-        installationClient;
-
-    if (configuration && configuration.notifications && Object.keys(configuration.notifications).length > 0) {
-        router.use(addPushContext);
-        router.route('/:installationId')
-            .put(bodyParser.json({ reviver: stripTags }), put, errorHandler)
-            .delete(del, errorHandler);
-
         installationClient = notifications(configuration.notifications);
-    }
+
+    router.use(addPushContext);
+    router.route('/:installationId')
+        .put(respond)
+        .delete(respond);
 
     return router;
 
@@ -36,35 +32,9 @@ module.exports = function (configuration) {
         next();
     }
 
-    function put(req, res, next) {
-        var installationId = req.params.installationId,
-            installation = req.body,
-            user = req.azureMobile.user;
-
-        installationClient.putInstallation(installationId, installation, user && user.id)
-            .then(function (result) {
-                res.status(204).end();
-            })
-            .catch(next);
+    function respond(req, res, next) {
+        var action = req.method === 'PUT' ? 'registration' : 'deletion';
+        log.verbose(`Received push notification installation ${action} request. Returning stubbed response (registration only occurs when hosted on Azure).`);
+        res.status(204).end();
     }
-
-    function del(req, res, next) {
-        var installationId = req.params.installationId;
-
-        installationClient.deleteInstallation(installationId)
-            .then(function (result) {
-                res.status(204).end();
-            })
-            .catch(next);
-    }
-
-    function errorHandler(err, req, res, next) {
-        log.error(err);
-        res.status(400).send(err.message || 'Bad Request');
-    }
-
-    function stripTags(key, val) {
-        if (key.toLowerCase() !== 'tags')
-            return val;
-    }
-}
+};

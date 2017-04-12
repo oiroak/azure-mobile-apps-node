@@ -5,11 +5,7 @@
  * @module azure-mobile-apps/src/notifications
  * @description Functions for managing notification installations and the NH client
  */
-var util = require('util'),
-    promises = require('../utilities/promises'),
-    NotificationHubService = require('azure-sb').NotificationHubService,
-    InstallationIdTag = "$InstallationId:{%s}",
-    UserIdTagPrefix = "_UserId:";
+var NotificationHubService = require('azure-sb').NotificationHubService;
 
 /**
  * Creates an instance of the notifications module specified in the configuration
@@ -21,74 +17,8 @@ module.exports = function (configuration) {
 
     return {
         /** Returns an instance of the {@link http://azure.github.io/azure-sdk-for-node/azure-sb/latest/NotificationHubService.html|Notification Hubs Service} */
-        getClient: function () { return nhClient; },
-
-        /**
-         * Creates or updates the installation id with the supplied installation
-         * @param  {string} installationId The installation id, usually a guid
-         * @param  {object} installation The notification hubs installation object
-         * @param  {string} [user] The user id to associate with the installation
-         * @return A promise that yields the notification hubs client response
-         */
-        putInstallation: function (installationId, installation, userId) {
-            installation.installationId = installationId;
-            return getTagsByInstallationId(installationId)
-                .then(function (tags) {
-                    installation.tags = addUserTag(tags, userId);
-                    return promises.wrap(nhClient.createOrUpdateInstallation, nhClient)(installation);
-                });
-        },
-
-        /**
-         * Deletes the installation specified by the installation id
-         * @param  {string} installationId The installation id, usually a guid
-         * @return A promise that yields the notification hubs client response
-         */
-        deleteInstallation: function (installationId) {
-            return promises.wrap(nhClient.deleteInstallation, nhClient)(installationId);
-        }
+        getClient: function () { return nhClient; }
     };
-
-    function getTagsByInstallationId(installationId) {
-        var installationIdAsTag = util.format(InstallationIdTag, installationId);
-
-        return mapRegistrations(installationIdAsTag, function (registration) { return registration.Tag });
-    }
-
-    function addUserTag(tags, userId) {
-        if (userId) {
-            tags = tags.filter(function (tag) {
-                return tag && tag.indexOf(UserIdTagPrefix) !== 0;
-            });
-            tags.push(UserIdTagPrefix + userId);
-        }
-        return tags;
-    }
-
-    function mapRegistrations(tag, mapFunc) {
-        var mapFunction = mapFunc;
-
-        return promises.create(function (result, reject) {
-            var mapFunc = mapFunc || function (registration) { return registration; };
-            var results = [];
-            // nh limits to 100 registrations per call
-            listRegistrations(100, 0);
-
-            function listRegistrations(top, skip) {
-                nhClient.listRegistrationsByTag(tag, { top: top, skip: skip }, function (err, res) {
-                    if (err) {
-                        reject(err);
-                    }
-                    results = results.concat(res.map(mapFunction));
-                    if (res.length < top) {
-                        result(results);
-                    } else {
-                        listRegistrations(top, skip + top);
-                    }
-                });
-            }
-        });
-    }
 
     function createClient() {
         if(!configuration)
