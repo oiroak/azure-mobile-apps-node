@@ -33,7 +33,8 @@ module.exports = function (configuration) {
             definitions: tableSchemas.reduce(function (definitions, schema) {
                 definitions[schema.name] = createTableDefinition(configuration.tables[schema.name], schema);
                 return definitions;
-            }, { errorType: errorDefinition() })
+            }, { errorType: errorDefinition() }),
+            securityDefinitions: securityDefinitions()
         };
 
         function errorDefinition() {
@@ -42,6 +43,16 @@ module.exports = function (configuration) {
                 properties: {
                     error: { type: 'string', description: 'The error message' },
                     stack: { type: 'string', description: 'If debug mode is enabled, the stack trace for the error' }
+                }
+            };
+        }
+
+        function securityDefinitions() {
+            return {
+                authenticated: {
+                    type: 'oauth2',
+                    flow: 'implicit',
+                    authorizationUrl: 'https://' + host + '/.auth/login/aad'
                 }
             };
         }
