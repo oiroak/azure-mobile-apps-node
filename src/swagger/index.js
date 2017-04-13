@@ -49,10 +49,11 @@ module.exports = function (configuration) {
 
         function securityDefinitions() {
             return {
-                authenticated: {
+                EasyAuth: {
                     type: 'oauth2',
                     flow: 'implicit',
-                    authorizationUrl: 'https://' + host + '/.auth/login/aad'
+                    authorizationUrl: 'https://' + host + '/.auth/login/aad',
+                    oauth2RedirectUri: 'https://' + host + '/.auth/login/done'
                 }
             };
         }

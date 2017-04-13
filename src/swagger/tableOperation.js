@@ -20,7 +20,7 @@ module.exports = function (configuration, schema) {
             parameters: options.parameters.map(createParameter),
             operationId: options.operation + camelCase(schema.name),
             responses: options.responses,
-            security: security()
+            security: security(options.operation)
         };
 
         if(options.odata)
@@ -84,17 +84,17 @@ module.exports = function (configuration, schema) {
     }
 
     function security(operation) {
-        var definitions = [], 
-            access = operationAccess(operation);
-
-        if((access && access === 'authenticated') || (!access && schema.definition.access === 'authenticated'))
+        var definitions = [];
+        if(operationAccess(operation) === 'authenticated')
             definitions.push({"EasyAuth": []});
         return definitions;
     }
 
     function operationAccess(operation) {
-        var tableOperationName = tableOperation(operation);
-        return schema.definition[tableOperationName] && schema.definition[tableOperationName].access;
+        var tableOperationName = tableOperation(operation),
+            operationAccessLevel = schema.definition[tableOperationName] && schema.definition[tableOperationName].access;
+        
+        return operationAccessLevel || schema.definition.access || 'anonymous';
     }
 
     function tableOperation(operation) {
