@@ -45,7 +45,12 @@ module.exports = function(configuration) {
 
     function resolveSwaggerUi() {
         try {
-            return path.dirname(require.resolve('swagger-ui'));
+            // enforce that the swagger-ui package is installed
+            // when the full bundle is restored to the package, we'll revert to using that
+            require.resolve('swagger-ui');
+
+            // just return the embedded swagger ui for now
+            return path.join(__dirname, '..', '..', 'swagger', 'ui');
         } catch(error) { }
     }
 };
