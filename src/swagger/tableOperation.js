@@ -19,7 +19,8 @@ module.exports = function (configuration, schema) {
             description: options.description,
             parameters: options.parameters.map(createParameter),
             operationId: options.operation + camelCase(schema.name),
-            responses: options.responses
+            responses: options.responses,
+            security: security()
         };
 
         if(options.odata)
@@ -80,5 +81,35 @@ module.exports = function (configuration, schema) {
 
     function camelCase(name) {
         return name[0].toUpperCase() + name.substring(1);
+    }
+
+    function security(operation) {
+        var definitions = [], 
+            access = operationAccess(operation);
+
+        if((access && access === 'authenticated') || (!access && schema.definition.access === 'authenticated'))
+            definitions.push({"EasyAuth": []});
+        return definitions;
+    }
+
+    function operationAccess(operation) {
+        var tableOperationName = tableOperation(operation);
+        return schema.definition[tableOperationName] && schema.definition[tableOperationName].access;
+    }
+
+    function tableOperation(operation) {
+        switch(operation) {
+            case 'Find':
+            case 'Query':
+                return 'read';
+            case 'Create':
+                return 'insert';
+            case 'Update':
+                return 'update';
+            case 'Delete':
+                return 'delete';
+            case 'Undelete':
+                return 'undelete';
+        }
     }
 };
