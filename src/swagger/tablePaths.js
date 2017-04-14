@@ -4,8 +4,8 @@
 var tableOperation = require('./tableOperation');
 
 module.exports = function (configuration) {
-    return function (schema) {
-        var createOperation = tableOperation(configuration, schema),
+    return function (schema, definition) {
+        var createOperation = tableOperation(configuration, schema, definition),
             paths = {};
 
         paths['/tables/' + schema.name] = {

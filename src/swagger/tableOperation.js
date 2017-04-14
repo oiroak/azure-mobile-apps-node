@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 var ODataParameters = require('./ODataParameters');
 
-module.exports = function (configuration, schema) {
+module.exports = function (configuration, schema, definition) {
     var createOperation = function (options) { //summary, description, parameters, odata, responses, operation
         options.parameters = options.parameters || [];
         options.responses = options.responses || {};
@@ -92,9 +92,9 @@ module.exports = function (configuration, schema) {
 
     function operationAccess(operation) {
         var tableOperationName = tableOperation(operation),
-            operationAccessLevel = schema.definition[tableOperationName] && schema.definition[tableOperationName].access;
+            operationAccessLevel = definition[tableOperationName] && definition[tableOperationName].access;
         
-        return operationAccessLevel || schema.definition.access || 'anonymous';
+        return operationAccessLevel || definition.access || 'anonymous';
     }
 
     function tableOperation(operation) {

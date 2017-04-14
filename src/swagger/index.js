@@ -27,7 +27,7 @@ module.exports = function (configuration) {
             },
             tags: tables.map(createTableTag),
             paths: tableSchemas.reduce(function (paths, schema) {
-                paths = merge(paths, createTablePaths(schema));
+                paths = merge(paths, createTablePaths(schema, configuration.tables[schema.name]));
                 return paths;
             }, {}),
             definitions: tableSchemas.reduce(function (definitions, schema) {
@@ -49,11 +49,10 @@ module.exports = function (configuration) {
 
         function securityDefinitions() {
             return {
-                EasyAuth: {
-                    type: 'oauth2',
-                    flow: 'implicit',
-                    authorizationUrl: 'https://' + host + '/.auth/login/aad',
-                    oauth2RedirectUri: 'https://' + host + '/.auth/login/done'
+                'EasyAuth': {
+                    type: 'apiKey',
+                    in: 'header',
+                    name: 'x-zumo-auth'
                 }
             };
         }
