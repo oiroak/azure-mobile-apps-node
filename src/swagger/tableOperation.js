@@ -102,7 +102,7 @@ module.exports = function (configuration, schema, definition) {
             case 'Find':
             case 'Query':
                 return 'read';
-            case 'Create':
+            case 'Insert':
                 return 'insert';
             case 'Update':
                 return 'update';

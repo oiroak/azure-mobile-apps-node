@@ -52,9 +52,9 @@ describe('azure-mobile-apps.swagger', function () {
         });
 
         it("adds security attribute to individual operations", function () {
-            var swagger = paths(configuration)(schema, { name: 'todoitem', read: { access: 'authenticated' } });
-            expect(swagger['/tables/todoitem'].get.security).to.deep.equal([{ EasyAuth: [] }]);
-            expect(swagger['/tables/todoitem'].post.security).to.deep.equal([]);
+            var swagger = paths(configuration)(schema, { name: 'todoitem', insert: { access: 'authenticated' } });
+            expect(swagger['/tables/todoitem'].get.security).to.deep.equal([]);
+            expect(swagger['/tables/todoitem'].post.security).to.deep.equal([{ EasyAuth: [] }]);
         });
 
         it("adds security attribute to tables", function () {
