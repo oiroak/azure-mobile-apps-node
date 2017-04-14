@@ -65,10 +65,16 @@
   </defs>
 </svg>
 
+<div>
+  Log in with:
+  <button id="aad">AAD</button>
+</div>
+
 <div id="swagger-ui"></div>
 
 <script src="./swagger-ui-bundle.js"> </script>
 <script src="./swagger-ui-standalone-preset.js"> </script>
+<script src="https://zumo.blob.core.windows.net/sdk/azure-mobile-apps-client.2.0.1.js"> </script>
 <script>
 window.onload = function() {
   // Build a system
@@ -87,6 +93,11 @@ window.onload = function() {
   })
 
   window.ui = ui
+
+  var client = new WindowsAzure.MobileServiceClient('https://daquickstart.azurewebsites.net');
+  document.getElementById('aad').onclick = function () {
+    client.login('aad');
+  }
 }
 </script>
 </body>
