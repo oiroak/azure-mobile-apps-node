@@ -30,13 +30,14 @@ describe('azure-mobile-apps.swagger', function () {
             "info": {},
             "tags": {},
             "paths": {},
-            "definitions": { errorType: {} }
+            "definitions": { "errorType": {} },
+            "securityDefinitions": { "EasyAuth": {} }
         });
     });
 
     describe('tables.path', function () {
         it("generates path objects for tables", function () {
-            expect(paths(configuration)(table)).to.containSubset({
+            expect(paths(configuration)(schema, table)).to.containSubset({
                 '/tables/todoitem': {
                     get: { parameters: [ { name: "$filter" }, { name: "zumo-api-version" } ], operationId: 'QueryTodoitem', responses: {} },
                     post: { parameters: [ { in: 'body' }, { name: "zumo-api-version" } ], operationId: 'InsertTodoitem', responses: {} }
@@ -48,6 +49,24 @@ describe('azure-mobile-apps.swagger', function () {
                     delete: { parameters: [ { name: "id" }, { name: "zumo-api-version" } ], operationId: 'DeleteTodoitem', responses: {} }
                 }
             });
+        });
+
+        it("adds security attribute to individual operations", function () {
+            var swagger = paths(configuration)(schema, { name: 'todoitem', insert: { access: 'authenticated' } });
+            expect(swagger['/tables/todoitem'].get.security).to.deep.equal([]);
+            expect(swagger['/tables/todoitem'].post.security).to.deep.equal([{ EasyAuth: [] }]);
+        });
+
+        it("adds security attribute to tables", function () {
+            var swagger = paths(configuration)(schema, { name: 'todoitem', access: 'authenticated' });
+            expect(swagger['/tables/todoitem'].get.security).to.deep.equal([{ EasyAuth: [] }]);
+            expect(swagger['/tables/todoitem'].post.security).to.deep.equal([{ EasyAuth: [] }]);
+        });
+
+        it("individual operations override table level access", function () {
+            var swagger = paths(configuration)(schema, { name: 'todoitem', access: 'authenticated', read: { access: 'anonymous' } });
+            expect(swagger['/tables/todoitem'].get.security).to.deep.equal([]);
+            expect(swagger['/tables/todoitem'].post.security).to.deep.equal([{ EasyAuth: [] }]);
         });
     });
 

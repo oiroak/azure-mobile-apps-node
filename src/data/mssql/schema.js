@@ -86,7 +86,8 @@ module.exports = function (configuration) {
                             name: column.name,
                             type: helpers.getPredefinedType(column.type)
                         };
-                    })
+                    }),
+                    definition: table
                 };
             });
         }

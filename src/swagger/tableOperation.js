@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 var ODataParameters = require('./ODataParameters');
 
-module.exports = function (configuration, schema) {
+module.exports = function (configuration, schema, definition) {
     var createOperation = function (options) { //summary, description, parameters, odata, responses, operation
         options.parameters = options.parameters || [];
         options.responses = options.responses || {};
@@ -19,7 +19,8 @@ module.exports = function (configuration, schema) {
             description: options.description,
             parameters: options.parameters.map(createParameter),
             operationId: options.operation + camelCase(schema.name),
-            responses: options.responses
+            responses: options.responses,
+            security: security(options.operation)
         };
 
         if(options.odata)
@@ -80,5 +81,35 @@ module.exports = function (configuration, schema) {
 
     function camelCase(name) {
         return name[0].toUpperCase() + name.substring(1);
+    }
+
+    function security(operation) {
+        var definitions = [];
+        if(operationAccess(operation) === 'authenticated')
+            definitions.push({"EasyAuth": []});
+        return definitions;
+    }
+
+    function operationAccess(operation) {
+        var tableOperationName = tableOperation(operation),
+            operationAccessLevel = definition[tableOperationName] && definition[tableOperationName].access;
+        
+        return operationAccessLevel || definition.access || 'anonymous';
+    }
+
+    function tableOperation(operation) {
+        switch(operation) {
+            case 'Find':
+            case 'Query':
+                return 'read';
+            case 'Insert':
+                return 'insert';
+            case 'Update':
+                return 'update';
+            case 'Delete':
+                return 'delete';
+            case 'Undelete':
+                return 'undelete';
+        }
     }
 };

@@ -27,13 +27,14 @@ module.exports = function (configuration) {
             },
             tags: tables.map(createTableTag),
             paths: tableSchemas.reduce(function (paths, schema) {
-                paths = merge(paths, createTablePaths(schema));
+                paths = merge(paths, createTablePaths(schema, configuration.tables[schema.name]));
                 return paths;
             }, {}),
             definitions: tableSchemas.reduce(function (definitions, schema) {
                 definitions[schema.name] = createTableDefinition(configuration.tables[schema.name], schema);
                 return definitions;
-            }, { errorType: errorDefinition() })
+            }, { errorType: errorDefinition() }),
+            securityDefinitions: securityDefinitions()
         };
 
         function errorDefinition() {
@@ -42,6 +43,16 @@ module.exports = function (configuration) {
                 properties: {
                     error: { type: 'string', description: 'The error message' },
                     stack: { type: 'string', description: 'If debug mode is enabled, the stack trace for the error' }
+                }
+            };
+        }
+
+        function securityDefinitions() {
+            return {
+                'EasyAuth': {
+                    type: 'apiKey',
+                    in: 'header',
+                    name: 'x-zumo-auth'
                 }
             };
         }
