@@ -37,7 +37,7 @@ app.listen(process.env.PORT || 3000);
 
 ## Quickstart
 
-0. Create a new directory, initialize git, and initialize npm
+1. Create a new directory, initialize git, and initialize npm
 
   ```
   mkdir quickstart
@@ -46,14 +46,14 @@ app.listen(process.env.PORT || 3000);
   npm init --yes
   ```
 
-0. Install (with npm) the azure-mobile-apps and express packages
+2. Install (with npm) the azure-mobile-apps and express packages
 
   `npm install express azure-mobile-apps --save`
 
-0. Create a suitable .gitignore file.  You can generate a suitable .gitignore
+3. Create a suitable .gitignore file.  You can generate a suitable .gitignore
 file using the generator at [gitignore.io](https://www.gitignore.io)
 
-0. Create a server.js file and add the following code to the file (or use the code from one of our samples):
+4. Create a server.js file and add the following code to the file (or use the code from one of our samples):
 
   ```js
   var app = require('express')(); // Create an instance of an Express app
@@ -65,9 +65,9 @@ file using the generator at [gitignore.io](https://www.gitignore.io)
   app.listen(process.env.PORT || 3000);
   ```
 
-0. Run your project locally with `node server.js`
+5. Run your project locally with `node server.js`
 
-0. Publish your project to an existing Azure Mobile App by adding it as a remote and pushing your changes.
+6. Publish your project to an existing Azure Mobile App by adding it as a remote and pushing your changes.
 
   ```
   git remote add azure https://{user}@{sitename}.scm.azurewebsites.net:443/{sitename}.git
@@ -76,7 +76,7 @@ file using the generator at [gitignore.io](https://www.gitignore.io)
   git push azure master
   ```
 
-For steps 4-5, you can use any of the clients found in the [Client & Server Quickstarts](https://github.com/Azure/azure-mobile-services-quickstarts) to test.
+To test steps 4-5, you can use any of the clients found in the [Client & Server Quickstarts](https://github.com/Azure/azure-mobile-services-quickstarts).
 
 ## Running Tests
 
