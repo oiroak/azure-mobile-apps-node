@@ -107,6 +107,10 @@ tests and is recommended for production code.
 We use [GitHub Issues](https://github.com/Azure/azure-mobile-apps-node/issues) to track all work
 with this library.  We use Milestones to track the work going into a particular release.
 
+## Future of Azure Mobile Apps
+ 
+Microsoft is committed to fully supporting Azure Mobile Apps, including **support for the latest OS release, bug fixes, documentation improvements, and community PR reviews**. Please note that the product team is **not currently investing in any new feature work** for Azure Mobile Apps. We highly appreciate community contributions to all areas of Azure Mobile Apps. 
+
 ## Contributing
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
