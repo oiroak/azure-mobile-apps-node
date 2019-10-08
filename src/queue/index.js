@@ -18,7 +18,7 @@ async function worker({ queue }) {
   await channel.assertQueue(queue);
 
   await channel.consume(
-    q,
+    queue,
     msg => {
       console.log(msg.content.toString());
     },
