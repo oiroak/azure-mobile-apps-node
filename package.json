@@ -15,6 +15,7 @@
     "travis": "npm run lint && npm run testCI"
   },
   "dependencies": {
+    "amqplib": "^0.5.5",
     "azure-odata-sql": "^0.1.0",
     "azure-query-js": "^0.1.0",
     "azure-sb": "^0.10.3",
@@ -39,7 +40,7 @@
     "sinon": "^1.16.1",
     "sinon-as-promised": "^4.0.2",
     "sinon-chai": "^2.8.0",
-    "sqlite3": "^3.1.2",
+    "sqlite3": "^4.1.0",
     "supertest": "^2.0.0",
     "supertest-as-promised": "^4.0.0",
     "swagger-ui": "^2.2.3"

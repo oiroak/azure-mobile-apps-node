@@ -5,3 +5,4 @@ azureMobile.js
 *.sqlite
 *.sqlite-journal
 yarn.lock
+.history
