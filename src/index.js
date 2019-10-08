@@ -7,15 +7,15 @@ The azure-mobile-apps module is the Nodejs implementation of Azure Mobile Apps
 @see {@link http://azure.microsoft.com/en-us/services/app-service/mobile/ Azure Mobile Apps}
 */
 
-var loadConfiguration = require('./configuration'),
-    table = require('./express/tables/table'),
-    logger = require('./logger'),
-    promises = require('./utilities/promises'),
-    query = require('./query'),
-
-    platforms = {
-        express: require('./express'),
-    };
+var loadConfiguration = require("./configuration"),
+  table = require("./express/tables/table"),
+  logger = require("./logger"),
+  promises = require("./utilities/promises"),
+  query = require("./query"),
+  queue = require("./queue"),
+  platforms = {
+    express: require("./express")
+  };
 
 /**
 Creates an instance of the azure-mobile-apps server object for the platform specified in the configuration.
@@ -25,19 +25,22 @@ Express 4.x is currently the only supported platform.
 @param {object} environment=process.env An object containing the environment to load configuration from
 @returns {module:azure-mobile-apps/src/express}
 */
-module.exports = function (configuration, environment) {
-    return module.exports.create(loadConfiguration.from()
-        .defaults(configuration)
-        .environment(environment)
-        .settingsJson()
-        .file()
-        .object(configuration)
-        .commandLine()
-        .apply());
+module.exports = function(configuration, environment) {
+  return module.exports.create(
+    loadConfiguration
+      .from()
+      .defaults(configuration)
+      .environment(environment)
+      .settingsJson()
+      .file()
+      .object(configuration)
+      .commandLine()
+      .apply()
+  );
 };
 
-module.exports.create = function (configuration) {
-    return platforms[configuration.platform](configuration);
+module.exports.create = function(configuration) {
+  return platforms[configuration.platform](configuration);
 };
 
 /**
@@ -56,5 +59,9 @@ module.exports.query = query;
 /** @type {module:azure-mobile-apps/src/utilities/promises} */
 module.exports.promises = promises;
 
+module.exports.queue = queue;
+
 // this is purely a helper function to allow intellisense for custom API definitions
-module.exports.api = function (definition) { return definition; };
+module.exports.api = function(definition) {
+  return definition;
+};

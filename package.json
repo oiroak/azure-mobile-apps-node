@@ -9,6 +9,7 @@
   "license": "MIT",
   "scripts": {
     "test": "npm run lint && mocha",
+    "testonly": "mocha",
     "lint": "jshint src",
     "jsdoc": "jsdoc -c jsdoc/config.json",
     "testCI": "mocha --timeout 10000",
